@@ -14,7 +14,8 @@ public class TokenBlacklistService {
 		blacklist.add(token);
 	}
 
-	public boolean isBlacklisted(String token) {
-		return blacklist.contains(token);
-	}
+	// Método que requiere tu filtro
+    public boolean estaInvalidado(String token) {
+        return blacklist.contains(token);
+    }
 }
