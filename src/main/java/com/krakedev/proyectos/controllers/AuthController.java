@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krakedev.proyectos.entidades.Usuario;
+import com.krakedev.proyectos.services.TokenBlacklistService;
 import com.krakedev.proyectos.services.UsuarioService;
 import com.krakedev.proyectos.repositories.UsuarioRepository;
 
@@ -21,10 +23,12 @@ public class AuthController {
     
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public AuthController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
+    public AuthController(UsuarioService usuarioService, UsuarioRepository usuarioRepository, TokenBlacklistService tokenBlacklistService) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
     
     @PostMapping("/registrar")
@@ -50,6 +54,20 @@ public class AuthController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrecta");
         }
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error: Debes proveer un token Bearer válido en la cabecera Authorization");
+        }
+        
+        // Extraemos el token quitando la palabra "Bearer " (primeros 7 caracteres)
+        String token = authHeader.substring(7);
+        tokenBlacklistService.addToken(token);
+        
+        return ResponseEntity.ok(Map.of("mensaje", "Logout exitoso. El token ha sido invalidado."));
     }
     
     @GetMapping
