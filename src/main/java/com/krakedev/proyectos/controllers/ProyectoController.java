@@ -1,8 +1,11 @@
 package com.krakedev.proyectos.controllers;
 
+
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import com.krakedev.proyectos.entidades.Proyecto;
 import com.krakedev.proyectos.services.ProyectoService;
@@ -15,6 +18,7 @@ public class ProyectoController {
 		this.service = service;
 	}
 
+
 	@PostMapping
 	public ResponseEntity<?> guardar(@RequestBody Proyecto proyecto) {
 		try {
@@ -25,6 +29,8 @@ public class ProyectoController {
 					.body("Error al guardar proyecto: " + e.getMessage());
 		}
 	}
+
+	
 
 	@GetMapping
 	public ResponseEntity<?> listar() {
@@ -51,6 +57,7 @@ public class ProyectoController {
 		}
 	}
 
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizar(
 			@PathVariable int id,

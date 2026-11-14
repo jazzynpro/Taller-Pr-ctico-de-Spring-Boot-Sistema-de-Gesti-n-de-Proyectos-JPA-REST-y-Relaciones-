@@ -26,6 +26,7 @@ public class TareaController {
 		this.service = service;
 	}
 
+
 	@PostMapping
 	public ResponseEntity<?> guardar(@RequestBody Tarea tarea) {
 		try {
@@ -40,6 +41,7 @@ public class TareaController {
 		}
 	}
 
+	
 	@GetMapping
 	public ResponseEntity<?> listar() {
 		try {

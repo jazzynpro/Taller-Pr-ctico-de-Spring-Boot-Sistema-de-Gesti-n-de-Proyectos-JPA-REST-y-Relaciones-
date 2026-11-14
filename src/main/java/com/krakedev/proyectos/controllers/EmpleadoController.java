@@ -36,6 +36,7 @@ public class EmpleadoController {
 		}
 	}
 
+
 	@GetMapping
 	public ResponseEntity<?> listar() {
 		try {
